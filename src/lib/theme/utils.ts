@@ -1,7 +1,8 @@
 import chroma, { type Color, type Scale } from 'chroma-js';
 
 import { colorShades } from './constants';
-import type { ColorSet, ColorShade, ShadeSet, VarColorCall } from './types';
+import type { ColorSet, ColorShade, ShadeSet, VarColorObj, VarColorStr } from './types';
+import type { DeepReadonly } from '$lib/shared/utils';
 
 /**
  * creates a random `Color`.
@@ -83,16 +84,61 @@ export function createShadeSetFromScale(scale: Scale) {
 }
 
 /**
- * extracts the `set` and `shade` of the given `str`.
- * @param str the given `VarColorCall`
+ * extracts the `set` and `shade` of the given `str`, note that
+ * this does not return a `VarColorObj`, but the set's name and shade.
+ * @param str the given `VarColorStr`
  */
-export function extractVarColorCall(str: VarColorCall) {
+export function extractVarColorStr(str: VarColorStr) {
 	const match = str.match(/^var\(--color-(.+?)-(\d+)\)$/)!;
 
 	return {
-		set: match[1],
+		name: match[1],
 		shade: match[2] as ColorShade
 	};
+}
+
+/**
+ * from the given `sets`, get the object's `VarColorObj` representation using the set's id
+ *  @param sets the context for the given `str`
+ *  @param str the thing we want to convert
+ *
+ */
+export function toVarColorObj(sets: ColorSet[], str: VarColorStr): VarColorObj | null {
+	const [_, name, shade] = str.match(/^var\(--color-(.+?)-(\d+)\)$/)!;
+	const set = sets.find((set) => set.name === name);
+
+	return set
+		? {
+				setId: name,
+				shade: shade as ColorShade
+			}
+		: null;
+}
+
+/**
+ * from the given `sets`, get the object's `VarColorStr` representation using the set's name
+ * @param sets the context for the given `obj`
+ * @param obj the thing we want to convert
+ */
+export function toVarColorStr(
+	sets: DeepReadonly<ColorSet[]>,
+	obj: VarColorObj
+): VarColorStr | null {
+	const set = sets.find((set) => set.id === obj.setId);
+	return set ? `var(--color-${set.name}-${obj.shade})` : null;
+}
+
+/**
+ * from the given `sets`, use `obj` as a map to get the value for the target set.
+ * @param sets the context for the given `obj`
+ * @param obj the `VarColorObj` to use as a map to the value
+ */
+export function getVarColorObjValue(
+	sets: DeepReadonly<ColorSet[]>,
+	obj: VarColorObj
+): string | undefined {
+	const v = sets.find((set) => set.id === obj.setId)?.[obj.shade];
+	return v;
 }
 
 export function isColorSet(set: any): set is ColorSet {
@@ -100,12 +146,18 @@ export function isColorSet(set: any): set is ColorSet {
 		typeof set.id === 'string' &&
 		typeof set.name === 'string' &&
 		typeof set.contrasts === 'object' &&
-		isVarColorCall(set.contrasts.light) &&
-		isVarColorCall(set.contrasts.dark) &&
+		isVarColorObj(set.contrasts.light) &&
+		isVarColorObj(set.contrasts.dark) &&
 		colorShades.every((shade) => typeof set[shade] === 'string')
 	);
 }
 
-export function isVarColorCall(str: unknown): str is VarColorCall {
+export function isVarColorObj(obj: any): obj is VarColorObj {
+	return (
+		typeof obj === 'object' && typeof obj.setId === 'string' && colorShades.includes(obj.shade)
+	);
+}
+
+export function isVarColorStr(str: unknown): str is VarColorStr {
 	return typeof str === 'string' && /^var\(--color-.+?-\d+\)$/.test(str);
 }

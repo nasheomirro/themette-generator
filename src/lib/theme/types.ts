@@ -15,13 +15,14 @@ export type ShadeSet = {
 	[K in ColorShade]: string;
 };
 
-export type VarColorCall = `var(--color-${string}-${ColorShade})`;
+export type VarColorStr = `var(--color-${string}-${ColorShade})`;
+export type VarColorObj = { setId: string; shade: ColorShade };
 
 export type ColorSet = ShadeSet & {
 	id: string;
 	name: string;
 	contrasts: {
-		light: VarColorCall;
-		dark: VarColorCall;
+		light: VarColorObj;
+		dark: VarColorObj;
 	};
 };
