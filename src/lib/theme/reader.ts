@@ -1,8 +1,8 @@
 import { nanoid } from 'nanoid';
 
-import { colorShades } from '$lib/colors/constants';
-import type { ColorSet, ColorShade, VarColorCall } from '$lib/colors/types';
-import { isColorSet, isVarColorCall } from '$lib/colors/utils';
+import { colorShades } from '$lib/theme/constants';
+import type { ColorShade, VarColorCall } from '$lib/theme/types';
+import { isColorSet, isVarColorCall } from '$lib/theme/utils';
 
 /** matches colors, capturing `set`, `shade`, and `value` */
 const checkColor =
