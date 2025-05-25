@@ -103,7 +103,10 @@ export function extractVarColorStr(str: VarColorStr) {
  *  @param str the thing we want to convert
  *
  */
-export function toVarColorObj(sets: ColorSet[], str: VarColorStr): VarColorObj | null {
+export function toVarColorObj(
+	sets: DeepReadonly<ColorSet[]>,
+	str: VarColorStr
+): VarColorObj | null {
 	const [_, name, shade] = str.match(/^var\(--color-(.+?)-(\d+)\)$/)!;
 	const set = sets.find((set) => set.name === name);
 
