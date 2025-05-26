@@ -34,8 +34,8 @@ export function readTheme(css: string) {
 				id,
 				name: set,
 				contrasts: {
-					light: { setId: id, shade: '950' },
-					dark: { setId: id, shade: '50' }
+					light: { setId: id, shade: '50' },
+					dark: { setId: id, shade: '950' }
 				}
 			};
 

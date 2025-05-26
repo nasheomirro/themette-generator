@@ -14,3 +14,13 @@ export type DeepReadonly<T> = T extends readonly []
 
 type DeepReadonlyObject<T> = { readonly [P in keyof T]: DeepReadonly<T[P]> };
 interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {}
+
+/** checks if the given mouse event is inside the rect */
+export function isCursorInside(event: MouseEvent, rect: DOMRect): boolean {
+	return (
+		event.clientX >= rect.left &&
+		event.clientX <= rect.right &&
+		event.clientY >= rect.top &&
+		event.clientY <= rect.bottom
+	);
+}
