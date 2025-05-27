@@ -1,60 +1,74 @@
 @theme {
-  --color-*: initial;
-  --font-weight-*: initial;
+	--color-*: initial;
+	--font-weight-*: initial;
 
-  --default-font-family: "Host Grotesk", sans-serif;
+	--default-font-family: 'Host Grotesk', sans-serif;
 
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-bold: 600;
+	--font-weight-light: 300;
+	--font-weight-normal: 400;
+	--font-weight-bold: 600;
 
-  --color-transparent: transparent;
+	--color-transparent: transparent;
 }
 
 @layer base {
-  @font-face {
-    font-family: "Host Grotesk";
-    src: url("/HostGrotesk-Regular.ttf");
-    font-weight: 400;
-  }
+	@font-face {
+		font-family: 'Host Grotesk';
+		src: url('/HostGrotesk-Regular.ttf');
+		font-weight: 400;
+	}
 
-  @font-face {
-    font-family: "Host Grotesk";
-    src: url("/HostGrotesk-Light.ttf");
-    font-weight: 300;
-  }
+	@font-face {
+		font-family: 'Host Grotesk';
+		src: url('/HostGrotesk-Light.ttf');
+		font-weight: 300;
+	}
 
-  @font-face {
-    font-family: "Host Grotesk";
-    src: url("/HostGrotesk-Bold.ttf");
-    font-weight: 600;
-  }
+	@font-face {
+		font-family: 'Host Grotesk';
+		src: url('/HostGrotesk-Bold.ttf');
+		font-weight: 600;
+	}
 
-  /* Works on Chrome, Edge, and Safari */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
+	/* Works on Chrome, Edge, and Safari */
+	::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
 
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
 
-  ::-webkit-scrollbar-thumb {
-    @apply bg-th-bg-200-800;
-    border-radius: 10px;
-    border: none;
-  }
+	::-webkit-scrollbar-thumb {
+		@apply bg-th-bg-200-800;
+		border-radius: 10px;
+		border: none;
+	}
 
-  :root {
-    @apply scheme-light dark:scheme-dark;
-  }
+	:root {
+		@apply scheme-light dark:scheme-dark;
+	}
 
-  body {
-    @apply text-th-bg-950-50 bg-th-bg-50-950 overflow-x-hidden w-screen;
-  }
+	body {
+		@apply text-th-bg-950-50 bg-th-bg-50-950 w-screen overflow-x-hidden;
+	}
 
-  button:not(:disabled) {
-    cursor: pointer;
-  }
+	button:not(:disabled) {
+		cursor: pointer;
+	}
+
+	/* input reset */
+	input[type='color']::-moz-color-swatch {
+		border: none;
+	}
+
+	input[type='color']::-webkit-color-swatch-wrapper {
+		padding: 0;
+		border-radius: 0;
+	}
+
+	input[type='color']::-webkit-color-swatch {
+		border: none;
+	}
 }

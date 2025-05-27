@@ -23,7 +23,7 @@
 
 <svelte:window
 	onkeydown={(e) => {
-		if (e.ctrlKey && e.key === 'q') {
+		if (e.ctrlKey && e.key.toLowerCase() === 'q') {
 			e.preventDefault();
 			toggleMode();
 		}

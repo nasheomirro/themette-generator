@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { app } from '$lib/app/index.svelte';
+	import ColorSetContrast from './ColorSetContrast.svelte';
 	import ColorSetName from './ColorSetName.svelte';
 	import ColorSetPalette from './ColorSetPalette.svelte';
 
@@ -21,6 +22,7 @@
 		<div class="space-y-8">
 			<ColorSetName set={selectedSet} />
 			<ColorSetPalette set={selectedSet} />
+			<ColorSetContrast set={selectedSet} />
 		</div>
 	</div>
 {/if}

@@ -100,7 +100,7 @@
 			</div>
 		</div>
 		<div>
-			<h3 class="mb-2 text-sm">{OPTIONS.find((item) => item.value === editMode)?.label} Mode</h3>
+			<h4 class="mb-2 text-sm">{OPTIONS.find((item) => item.value === editMode)?.label} Mode</h4>
 			<p class="text-th-bg-700-300 text-xs font-light">
 				{#if editMode === 'manual'}
 					You can edit each shade manually, switch to other editing modes if you want to
@@ -159,19 +159,3 @@
 		{/each}
 	</div>
 </div>
-
-<style>
-	/* input reset */
-	input[type='color']::-moz-color-swatch {
-		border: none;
-	}
-
-	input[type='color']::-webkit-color-swatch-wrapper {
-		padding: 0;
-		border-radius: 0;
-	}
-
-	input[type='color']::-webkit-color-swatch {
-		border: none;
-	}
-</style>

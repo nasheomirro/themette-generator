@@ -32,14 +32,30 @@ export function genRandomColor(
  */
 export function compareContrastsForColor(
 	color: string | Color,
-	a: string | Color,
-	b: string | Color
+	light: string | Color,
+	dark: string | Color
 ) {
 	const v = chroma(color);
-	const l = chroma(a);
-	const d = chroma(b);
+	const l = chroma(light);
+	const d = chroma(dark);
 
 	return chroma.contrast(v, l) > chroma.contrast(v, d) ? 'light' : 'dark';
+}
+
+/**
+ * returns the highest WCAG contrast score out of the given light or dark values.
+ * @param color
+ * @param light
+ * @param dark
+ */
+export function computeContrastForColor(
+	color: string | Color,
+	light: string | Color,
+	dark: string | Color
+) {
+	const n1 = chroma.contrast(color, light);
+	const n2 = chroma.contrast(color, dark);
+	return n1 > n2 ? n1 : n2;
 }
 
 /**
