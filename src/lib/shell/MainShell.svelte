@@ -43,16 +43,16 @@
 		<RadioGroup.Root
 			orientation="horizontal"
 			bind:value={panel.desktop}
-			class="bg-th-background-50-950 border-th-background-100-900 sticky top-16 ml-auto flex w-fit items-center gap-0.5 rounded-lg border p-1 max-md:hidden"
+			class="bg-th-bg-50-950 border-th-bg-100-900 sticky top-16 ml-auto flex w-fit items-center gap-0.5 rounded-lg border p-1 max-md:hidden"
 		>
 			<RadioGroup.Item
-				class="data-[state=checked]:bg-th-background-100-900 hover:bg-th-background-100-900 rounded p-1.5 text-xs transition"
+				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 rounded p-1.5 text-xs transition"
 				value="preview"
 			>
 				<PreviewIcon />
 			</RadioGroup.Item>
 			<RadioGroup.Item
-				class="data-[state=checked]:bg-th-background-100-900 hover:bg-th-background-100-900 rounded p-1.5 text-xs transition"
+				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 rounded p-1.5 text-xs transition"
 				value="code"
 			>
 				<CodeIcon />

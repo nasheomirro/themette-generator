@@ -11,9 +11,9 @@ import { getNextNameSuffix } from './utils';
 type UISet = {
 	/** The currently selected set's id. */
 	selectedId: string | null;
-	/** the id of the set that would be used for overriding the `--color-th-foreground-*` colors */
+	/** the id of the set that would be used for overriding the `--color-th-fg-*` colors */
 	foregroundId: string | null;
-	/** the id of the set that would be used for overriding the `--color-th-background-*` colors */
+	/** the id of the set that would be used for overriding the `--color-th-bg-*` colors */
 	backgroundId: string | null;
 };
 

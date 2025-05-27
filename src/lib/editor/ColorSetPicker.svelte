@@ -11,7 +11,7 @@
 	import FlyIcon from '~icons/lucide-lab/butterfly';
 	import PenIcon from '~icons/material-symbols/pen-size-5';
 
-	const cursorPosition = new Spring({ x: 0, y: 0 }, { stiffness: 0.2, damping: 0.4 });
+	const cursorPosition = new Spring({ x: 0, y: 0 }, { stiffness: 0.2, damping: 0.7 });
 
 	// variables related to dragging
 	let isDragging = $state(false);
@@ -175,7 +175,7 @@
 <div class="space-y-7">
 	<div class="space-y-2">
 		<div class="text-2xl font-bold">Color Sets</div>
-		<p class="text-th-background-700-300 text-sm font-light">
+		<p class="text-th-bg-700-300 text-sm font-light">
 			All the colors of your theme is placed here.
 		</p>
 	</div>
@@ -184,7 +184,7 @@
 			{#each app.sets as set, i (set.id)}
 				<li
 					animate:flip={{ duration: FLIP_DURATION }}
-					style="--self: var(--color-${set.name}-500); --contrast: var(--color-${set.name}-contrast-500)"
+					style="--self: var(--color-{set.name}-500); --contrast: var(--color-{set.name}-contrast-500)"
 					class="relative z-0 transition {isDragging &&
 						currentDraggedSetId === set.id &&
 						'scale-95 opacity-50'}"
@@ -210,7 +210,7 @@
 						const { id } = app.createEmptyColorSet();
 						app.updateUISetId('selectedId', id);
 					}}
-					class="text-th-background-500 flex h-10 w-10 items-center justify-center rounded-lg transition hover:scale-110"
+					class="text-th-bg-500 flex h-10 w-10 items-center justify-center rounded-lg transition hover:scale-110"
 				>
 					<AddIcon class="h-6 w-6" />
 					<span class="sr-only">New Color Set</span>
@@ -227,7 +227,7 @@
 					<div
 						style="--c: var(--color-{app.sets.find((set) => set.id === currentDraggedSetId)
 							?.name}-500)"
-						class="text-th-background-50 rounded-full bg-(--c) p-1"
+						class="text-th-bg-50 rounded-full bg-(--c) p-1"
 						transition:scale={{ duration: 100 }}
 					>
 						<FlyIcon />

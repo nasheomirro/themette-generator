@@ -1,0 +1,30 @@
+@utility centered-container {
+	@layer base {
+		@apply mx-auto max-w-[105rem];
+	}
+}
+
+@utility container-x-padding {
+	@layer base {
+		@apply px-4;
+	}
+}
+
+@utility btn {
+	@layer base {
+		@apply hover:bg-th-bg-100-900 block rounded-lg p-2 transition;
+	}
+}
+
+/* Forms */
+@utility label-text {
+	@layer base {
+		@apply text-th-bg-600-400 mb-2 block text-sm font-normal;
+	}
+}
+
+@utility input {
+	@layer base {
+		@apply ring-th-bg-100-900 focus:ring-th-fg-500 w-full rounded-md border-none bg-transparent px-2.5 py-2 text-sm ring-1 outline-0;
+	}
+}

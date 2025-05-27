@@ -9,7 +9,7 @@
 </script>
 
 <nav
-  class="h-14 flex items-center py-2.5 md:pt-3 border-b border-th-background-100-900 fixed top-0 left-0 w-full bg-th-background-50-950 z-40"
+  class="h-14 flex items-center py-2.5 md:pt-3 border-b border-th-bg-100-900 fixed top-0 left-0 w-full bg-th-bg-50-950 z-40"
 >
   <ul class="container-x-padding centered-container flex items-center grow gap-1">
     <li>

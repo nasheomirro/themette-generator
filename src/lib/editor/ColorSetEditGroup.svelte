@@ -14,7 +14,7 @@
 			<div class="mb-2 flex items-center justify-between">
 				<h3 class="text-xl font-bold">Edit Color Set</h3>
 			</div>
-			<p class="text-th-background-700-300 text-sm font-light">
+			<p class="text-th-bg-700-300 text-sm font-light">
 				Edit the current chosen color set here.
 			</p>
 		</div>

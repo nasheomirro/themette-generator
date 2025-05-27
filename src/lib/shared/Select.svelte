@@ -33,14 +33,14 @@ from the perspective of the consumer of this component, it will be typed appropr
 		<Select.Content
 			{...contentProps}
 			class="
-      bg-th-background-50-950 border-th-background-100-900 z-50 w-[var(--bits-select-anchor-width)] min-w-[var(--bits-select-anchor-width)]
+      bg-th-bg-50-950 border-th-bg-100-900 z-50 w-[var(--bits-select-anchor-width)] min-w-[var(--bits-select-anchor-width)]
       rounded-lg border
       data-[side=bottom]:translate-y-2 data-[side=left]:-translate-x-2 data-[side=right]:translate-x-2 data-[side=top]:-translate-y-2
       {contentProps?.class}"
 		>
 			{#each items as { value, label, disabled } (value)}
 				<Select.Item
-					class="data-highlighted:bg-th-background-100-900/50 flex justify-between px-4 py-2 text-sm"
+					class="data-highlighted:bg-th-bg-100-900/50 flex justify-between px-4 py-2 text-sm"
 					{value}
 					{label}
 					{disabled}

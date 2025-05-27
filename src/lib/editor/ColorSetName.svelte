@@ -24,7 +24,7 @@
 			}}
 		/>
 	</label>
-	<p class="text-th-background-600-400 text-xs font-light">
+	<p class="text-th-bg-600-400 text-xs font-light">
 		This will be used as the name on the generated CSS variables.
 	</p>
 </div>

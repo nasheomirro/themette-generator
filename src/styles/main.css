@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@import './base.css';
+
+@import '../themes/default.css';
+
+@import './ui.css';
+@import './utils.css';
+
+@custom-variant hocus (&:hover, &:focus);
+@custom-variant dark (&:where(.dark, .dark *));

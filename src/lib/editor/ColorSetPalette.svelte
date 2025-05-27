@@ -101,7 +101,7 @@
 		</div>
 		<div>
 			<h3 class="mb-2 text-sm">{OPTIONS.find((item) => item.value === editMode)?.label} Mode</h3>
-			<p class="text-th-background-700-300 text-xs font-light">
+			<p class="text-th-bg-700-300 text-xs font-light">
 				{#if editMode === 'manual'}
 					You can edit each shade manually, switch to other editing modes if you want to
 					automatically interpolate between two colors, three colors, or generate the whole pallete
