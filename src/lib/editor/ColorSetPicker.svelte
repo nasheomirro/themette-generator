@@ -210,7 +210,7 @@
 						const { id } = app.createEmptyColorSet();
 						app.updateUISetId('selectedId', id);
 					}}
-					class="text-th-bg-500 flex h-10 w-10 items-center justify-center rounded-lg transition hover:scale-110"
+					class="text-th-bg-500 flex h-10 w-10 items-center justify-center rounded-lg"
 				>
 					<AddIcon class="h-6 w-6" />
 					<span class="sr-only">New Color Set</span>
