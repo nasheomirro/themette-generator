@@ -5,6 +5,8 @@
 	import type { ColorSet } from '$lib/theme/types';
 	import { getVarColorObjValue, computeContrastForColor } from '$lib/theme/utils';
 
+	import WarningIcon from '~icons/material-symbols/warning';
+
 	type Props = {
 		set: ColorSet;
 	};
@@ -50,15 +52,10 @@
 			The numbers below show the contrast scores for each shade when the shade is used as background
 			and the contrast as text.
 		</p>
-		<ul class="mb-8 grid grid-cols-3 items-start gap-2">
+		<ul class="mb-8 grid grid-cols-2 gap-2">
 			{#each shades as { shade, value }}
 				<li
-					class="group grid h-10 grid-cols-2 items-center justify-center rounded-lg p-1 shadow-sm {value <
-					4.5
-						? 'bg-[#de3a3a]/20'
-						: value < 7
-							? 'bg-[#5be169]/20'
-							: 'bg-[#1fab9d]/20'}"
+					class="group border-th-bg-100-900 grid h-10 grid-cols-3 items-center rounded-lg border p-1"
 				>
 					<div class="text-center text-xs">
 						{shade}
@@ -68,12 +65,22 @@
 							{value.toFixed(2)}
 						</div>
 					</div>
+					<div class="flex items-center justify-center text-sm font-bold">
+						{#if value < 4.5}
+							<WarningIcon class="h-5 w-5" />
+						{:else if value < 7}
+							<span class="text-th-bg-500">AA</span>
+						{:else}
+							<span class="text-th-bg-500">AAA</span>
+						{/if}
+					</div>
 				</li>
 			{/each}
 		</ul>
 		<p class="text-th-bg-700-300 mb-8 text-xs font-light">
 			In some cases, shades, especially around (500), would often have low contrast scores. When
-			exporting code you have an option to remove contrast colors that have low contrast values.
+			exporting code you have an option to remove contrast colors that have low contrast scores from
+			being generated.
 		</p>
 	</div>
 </div>
