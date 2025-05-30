@@ -193,7 +193,10 @@
 					<button
 						ontouchstart={(e) => onCouldDragTouchStart(e, set.id, i)}
 						onmousedown={(e) => onCouldDragStart(e, set.id, i)}
-						onclick={() => app.updateUISetId('selectedId', set.id)}
+						onclick={() => {
+							app.updateUISetId('foregroundId', set.id);
+							app.updateUISetId('selectedId', set.id);
+							}}
 						class="group flex h-10 w-10 items-center justify-center gap-5 rounded-md bg-(--self) text-(--contrast) shadow transition hover:brightness-95 {app
 							.ids.selectedId === set.id && 'ring-2 ring-(--self)/50'}"
 					>
