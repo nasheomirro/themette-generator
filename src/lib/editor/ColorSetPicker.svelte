@@ -10,6 +10,7 @@
 	import AddIcon from '~icons/lucide/plus';
 	import FlyIcon from '~icons/lucide-lab/butterfly';
 	import PenIcon from '~icons/material-symbols/pen-size-5';
+	import BGIcon from '~icons/material-symbols/background-replace';
 
 	const cursorPosition = new Spring({ x: 0, y: 0 }, { stiffness: 0.2, damping: 0.7 });
 
@@ -180,7 +181,7 @@
 		</p>
 	</div>
 	<div class="relative" bind:this={container}>
-		<ul class="flex flex-wrap items-start gap-2">
+		<ul class="flex flex-wrap items-start gap-2.5">
 			{#each app.sets as set, i (set.id)}
 				<li
 					animate:flip={{ duration: FLIP_DURATION }}
@@ -196,13 +197,17 @@
 						onclick={() => {
 							app.updateUISetId('foregroundId', set.id);
 							app.updateUISetId('selectedId', set.id);
-							}}
+						}}
 						class="group flex h-10 w-10 items-center justify-center gap-5 rounded-md bg-(--self) text-(--contrast) shadow transition hover:brightness-95 {app
 							.ids.selectedId === set.id && 'ring-2 ring-(--self)/50'}"
 					>
+					{#if set.id === app.ids.backgroundId}
+						<BGIcon class="transition {app.ids.selectedId === set.id ? 'opacity-100' : 'opacity-80'}"/>
+					{:else}
 						<PenIcon
 							class="transition {app.ids.selectedId === set.id ? 'opacity-100' : 'opacity-0'}"
 						/>
+					{/if}
 						<span class="sr-only">edit {set.name}</span>
 					</button>
 				</li>
@@ -211,6 +216,7 @@
 				<button
 					onclick={() => {
 						const { id } = app.createEmptyColorSet();
+						app.updateUISetId('foregroundId', id);
 						app.updateUISetId('selectedId', id);
 					}}
 					class="text-th-bg-500 flex h-10 w-10 items-center justify-center rounded-lg"
