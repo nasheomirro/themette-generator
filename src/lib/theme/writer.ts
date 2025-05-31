@@ -61,7 +61,7 @@ export function writeTheme(sets: DeepReadonly<ColorSet[]>) {
 }
 
 /** just like `writeTheme`, but converts it into tailwind code using the boilerplate.  */
-function writeThemeToBoilerPlate(sets: ColorSet[]) {
+export function writeThemeToBoilerPlate(sets: DeepReadonly<ColorSet[]>) {
 	const {
 		parts: { colors, contrastPairs, contrasts, pairs }
 	} = writeTheme(sets);

@@ -26,8 +26,8 @@
 	<div
 		class="
       {panel.mobile === 'editor' ? 'max-md:block' : 'max-md:hidden'}
-      px-4 pt-10
-      pb-26 max-md:col-start-1 max-md:row-start-1 md:sticky md:top-14 md:z-30 md:h-[calc(100vh-3.5rem)] md:overflow-auto md:px-6 md:pb-10 lg:px-8
+      md:border-r-th-bg-100-900 px-4
+      pt-10 pb-26 max-md:col-start-1 max-md:row-start-1 md:sticky md:top-14 md:z-30 md:h-[calc(100vh-3.5rem)] md:overflow-auto md:border-r md:px-6 md:pb-10 lg:px-8
     "
 	>
 		<div>
@@ -37,32 +37,33 @@
 	<div
 		class="
       {panel.mobile === 'editor' && 'max-md:hidden'}
-      relative z-0 min-h-[200vh] w-full max-md:col-start-1 max-md:row-start-1
+      relative z-0 min-h-[200vh] w-full min-w-0 p-4 max-md:col-start-1 max-md:row-start-1 md:px-6 lg:px-8
     "
 	>
 		<RadioGroup.Root
 			orientation="horizontal"
 			bind:value={panel.desktop}
-			class="bg-th-bg-50-950 border-th-bg-100-900 sticky top-16 ml-auto flex w-fit items-center gap-0.5 rounded-lg border p-1 max-md:hidden"
+			class="bg-th-bg-50-950 border-th-bg-100-900 ml-auto flex w-fit items-center gap-1 rounded-lg border p-2 max-md:hidden mb-4"
 		>
 			<RadioGroup.Item
-				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 rounded p-1.5 text-xs transition"
+				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 flex items-center gap-2 rounded px-2 py-1.5 text-xs transition"
 				value="preview"
 			>
-				<PreviewIcon />
+				<PreviewIcon /> preview
 			</RadioGroup.Item>
 			<RadioGroup.Item
-				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 rounded p-1.5 text-xs transition"
-				value="code"
+				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 flex items-center gap-2 rounded px-2 py-1.5 text-xs transition"
+				value="generated"
 			>
-				<CodeIcon />
+				<CodeIcon /> CSS
 			</RadioGroup.Item>
 		</RadioGroup.Root>
 
 		<div
-			class="
-        {panel.mobile === 'preview' ? 'max-md:block' : 'max-md:hidden'} 
-        {panel.desktop === 'preview' ? 'md:block' : 'md:hidden'}
+			class="{panel.mobile === 'preview' ? 'max-md:block' : 'max-md:hidden'}  {panel.desktop ===
+			'preview'
+				? 'md:block'
+				: 'md:hidden'}
       "
 		>
 			{@render preview()}
@@ -70,7 +71,7 @@
 
 		<div
 			class="
-      {panel.mobile === 'generated' ? 'max-md:block' : 'max-md:hidden'}
+      {panel.mobile === 'generated' ? 'max-md:block' : 'max-md:hidden'} 
       {panel.desktop === 'generated' ? 'md:block' : 'md:hidden'}
     "
 		>

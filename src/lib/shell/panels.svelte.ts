@@ -6,5 +6,5 @@ type CurrentPanelObj = {
 /** determines the current active shell panel for both mobile and desktop */
 export const panel = $state<CurrentPanelObj>({
   mobile: "editor",
-  desktop: "preview",
+  desktop: "generated",
 });

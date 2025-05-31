@@ -1,5 +1,6 @@
 <script>
 	import Editor from '$lib/editor/Editor.svelte';
+	import CodePreview from '$lib/preview/CodePreview.svelte';
 	import MainShell from '$lib/shell/MainShell.svelte';
 </script>
 
@@ -8,7 +9,7 @@
 		<Editor />
 	{/snippet}
 	{#snippet code()}
-		<div></div>
+	<CodePreview />
 	{/snippet}
 	{#snippet preview()}
 		<div></div>

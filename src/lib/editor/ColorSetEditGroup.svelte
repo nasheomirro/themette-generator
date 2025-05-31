@@ -24,12 +24,13 @@
 				<h3 class="text-xl font-bold">Edit Color Set</h3>
 				<div class="flex gap-2">
 					<button
-						class="btn disabled:opacity-50"
-						onclick={() => app.updateUISetId('backgroundId', set.id)}
-						disabled={set.id === app.ids.backgroundId}
+						class="btn disabled:opacity-50 {app.ids.backgroundId === set.id && "bg-th-bg-200-800 duration-0"}"
+						onclick={() => {
+							app.updateUISetId('backgroundId', app.ids.backgroundId !== set.id ? set.id : null);
+						}}
 					>
 						<BGIcon />
-						<span class="sr-only">Use as Background</span>
+						<span class="sr-only">Toggle as Background</span>
 					</button>
 					<AlertDialog onconfirm={() => app.deleteColorSet(set.id)}>
 						{#snippet trigger()}

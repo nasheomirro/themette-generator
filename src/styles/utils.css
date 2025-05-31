@@ -4,12 +4,6 @@
 	}
 }
 
-@utility container-x-padding {
-	@layer base {
-		@apply px-4;
-	}
-}
-
 @utility btn {
 	@layer base {
 		@apply not-disabled:hover:bg-th-bg-100-900 block rounded-lg p-2 transition;
