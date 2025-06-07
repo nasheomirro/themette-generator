@@ -37,7 +37,7 @@
 	<div
 		class="
       {panel.mobile === 'editor' && 'max-md:hidden'}
-      relative z-0 min-h-[200vh] w-full min-w-0 p-4 max-md:col-start-1 max-md:row-start-1 md:px-6 lg:px-8
+      relative z-0 w-full min-w-0 p-4 max-md:col-start-1 max-md:row-start-1 md:px-6 lg:px-8
     "
 	>
 		<RadioGroup.Root

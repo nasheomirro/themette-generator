@@ -1,9 +1,23 @@
 import type { ColorSet } from './types';
 import { colorPairings, colorShades } from './constants';
 import { compareContrastsForColor, getVarColorObjValue, toVarColorStr } from './utils';
-
-import boilerplate from './boilerplate.css?raw';
 import type { DeepReadonly } from '$lib/shared/utils';
+
+const themeSnippet = `
+@theme {
+  $$colors$$
+
+  $$contrasts$$
+}
+`.trim();
+
+const inlineThemeSnippet = `
+@theme inline {
+  $$pairs$$
+
+  $$contrast-pairs$$
+}
+`.trim();
 
 /**
  * converts a set of color sets to it's css counterpart (raw and boilerplated).
@@ -61,15 +75,31 @@ export function writeTheme(sets: DeepReadonly<ColorSet[]>) {
 }
 
 /** just like `writeTheme`, but converts it into tailwind code using the boilerplate.  */
-export function writeThemeToBoilerPlate(sets: DeepReadonly<ColorSet[]>) {
+export function writeThemeToBoilerPlate(
+	sets: DeepReadonly<ColorSet[]>,
+	options?: {
+		removePairs?: boolean;
+	}
+) {
+	options = {
+		removePairs: false,
+		...options
+	};
+
 	const {
 		parts: { colors, contrastPairs, contrasts, pairs }
 	} = writeTheme(sets);
-	return boilerplate
-		.replace('$$colors$$', colors.trim())
-		.replace('$$contrasts$$', contrasts.trim())
-		.replace('$$pairs$$', pairs.trim())
-		.replace('$$contrast-pairs$$', contrastPairs.trim());
+
+	return [
+		themeSnippet.replace('$$colors$$', colors.trim()).replace('$$contrasts$$', contrasts.trim()),
+		options.removePairs
+			? ''
+			: inlineThemeSnippet
+					.replace('$$pairs$$', pairs.trim())
+					.replace('$$contrast-pairs$$', contrastPairs.trim())
+	]
+		.filter((s) => s)
+		.join('\n\n');
 }
 
 function color(set: string, shade: string, val: string) {

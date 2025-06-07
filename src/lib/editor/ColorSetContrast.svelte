@@ -78,9 +78,8 @@
 			{/each}
 		</ul>
 		<p class="text-th-bg-700-300 mb-8 text-xs font-light">
-			In some cases, shades, especially around (500), would often have low contrast scores. When
-			exporting code you have an option to remove contrast colors that have low contrast scores from
-			being generated.
+			Themette uses the best scoring color shade (50 or 950) of the contrast set for each shade in
+			the selected color set, but it doesn't guarantee that it will be up to WCAG standards.
 		</p>
 	</div>
 </div>
