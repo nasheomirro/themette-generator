@@ -58,6 +58,15 @@
 		cursor: pointer;
 	}
 
+	div:focus-visible,
+	button:focus-visible,
+	a:focus-visible,
+	input:focus-visible,
+	select:focus-visible,
+	textarea:focus-visible {
+		@apply keyboard-focused;
+	}
+
 	/* input reset */
 	input[type='color']::-moz-color-swatch {
 		border: none;

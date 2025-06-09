@@ -1,7 +1,12 @@
 import type { DeepReadonly } from '$lib/shared/utils';
 import { readTheme } from '$lib/theme/reader';
 import type { ColorSet } from '$lib/theme/types';
-import { createShadeSetFromScale, genRandomColor, genScaleFromColor } from '$lib/theme/utils';
+import {
+	createShadeSetFromScale,
+	genRandomColor,
+	genScaleFromColor,
+	getMostDesaturatedSet
+} from '$lib/theme/utils';
 
 import defaultTheme from '$themes/default.css?raw';
 import { nanoid } from 'nanoid';
@@ -31,6 +36,14 @@ class AppState {
 
 	get ids(): DeepReadonly<UISet> {
 		return this.#ids;
+	}
+
+	setNewTheme(sets: ColorSet[]) {
+		this.#sets = sets;
+
+		this.#ids.selectedId = this.#sets[0]?.id || null;
+		this.#ids.foregroundId = this.#sets[0]?.id || null;
+		this.#ids.backgroundId = getMostDesaturatedSet(sets)?.id || null;
 	}
 
 	/** finds the index of the given id, returns -1 if not found */

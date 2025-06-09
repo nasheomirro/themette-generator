@@ -4,6 +4,26 @@ import { colorShades } from './constants';
 import type { ColorSet, ColorShade, ShadeSet, VarColorObj, VarColorStr } from './types';
 import type { DeepReadonly } from '$lib/shared/utils';
 
+/** from a list of sets, returns the set that is the most desaturated and more likely to be the background set */
+export function getMostDesaturatedSet(sets: DeepReadonly<ColorSet[]>) {
+	let lowestSatScore = Infinity;
+
+	return sets.reduce((current: null | ColorSet, set) => {
+		// adds all the saturation scores of each shade and compares them to the current
+		let satScore = 0;
+		for (let shade of colorShades) {
+			satScore += chroma(set[shade]).hsl()[1];
+		}
+
+		if (satScore < lowestSatScore) {
+			lowestSatScore = satScore;
+			return set;
+		}
+
+		return current;
+	}, null);
+}
+
 /**
  * creates a random `Color`.
  * @param lightness the range to randomize the color's lightness, default is `[0.45, 0.6]`
