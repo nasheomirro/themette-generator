@@ -49,7 +49,7 @@
 				}}
 				class="flex justify-end gap-2"
 			>
-				{#if removeCancel}
+				{#if !removeCancel}
 					<AlertDialog.Cancel type="button" class="btn px-4">Cancel</AlertDialog.Cancel>
 				{/if}
 				<AlertDialog.Action type="submit" class="btn px-4">Confirm</AlertDialog.Action>
