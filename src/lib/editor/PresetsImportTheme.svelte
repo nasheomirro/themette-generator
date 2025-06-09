@@ -2,6 +2,9 @@
 	import FileDownIcon from '~icons/material-symbols/file-save-outline-rounded';
 	import { readTheme } from '$lib/theme/reader';
 	import { app } from '$lib/app/index.svelte';
+	import type { Theme } from '$lib/theme/types';
+	import { getNameWithoutExtension } from '$lib/shared/utils';
+	import { nanoid } from 'nanoid';
 
 	let isDraggingOver = $state(false);
 
@@ -12,7 +15,16 @@
 			try {
 				const fileContent = e.target?.result as string;
 				const sets = readTheme(fileContent);
-				app.setNewTheme(sets);
+				const theme: Theme = {
+					name: getNameWithoutExtension(file.name),
+					id: nanoid(),
+					createdAt: new Date(),
+					updatedAt: new Date(),
+					sets
+				};
+
+				app.addTheme(theme);
+				app.setSelectedThemeId(theme.id);
 			} catch {
 				alert('Error! Cannot read uploaded file.');
 			}
@@ -63,5 +75,5 @@
 	<span class="text-th-bg-600-400 text-center text-xs"
 		>Drag and drop your theme here or choose a file from your system.</span
 	>
-	<input type="file" class="absolute opacity-0 -z-10" onchange={handleFileChange} />
+	<input type="file" class="absolute -z-10 opacity-0" onchange={handleFileChange} />
 </label>

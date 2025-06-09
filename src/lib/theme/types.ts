@@ -26,3 +26,11 @@ export type ColorSet = ShadeSet & {
 		dark: VarColorObj;
 	};
 };
+
+export type Theme = {
+	id: string;
+	name: string;
+	createdAt: Date;
+	updatedAt: Date;
+	sets: ColorSet[];
+};

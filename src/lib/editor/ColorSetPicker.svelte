@@ -195,19 +195,21 @@
 						ontouchstart={(e) => onCouldDragTouchStart(e, set.id, i)}
 						onmousedown={(e) => onCouldDragStart(e, set.id, i)}
 						onclick={() => {
-							app.updateUISetId('foregroundId', set.id);
-							app.updateUISetId('selectedId', set.id);
+							app.updateId('foregroundId', set.id);
+							app.updateId('selectedSetId', set.id);
 						}}
 						class="group flex h-10 w-10 items-center justify-center gap-5 rounded-md bg-(--self) text-(--contrast) shadow transition hover:brightness-95 {app
-							.ids.selectedId === set.id && 'ring-2 ring-(--self)/50'}"
+							.ids.selectedSetId === set.id && 'ring-2 ring-(--self)/50'}"
 					>
-					{#if set.id === app.ids.backgroundId}
-						<BGIcon class="transition {app.ids.selectedId === set.id ? 'opacity-100' : 'opacity-80'}"/>
-					{:else}
-						<PenIcon
-							class="transition {app.ids.selectedId === set.id ? 'opacity-100' : 'opacity-0'}"
-						/>
-					{/if}
+						{#if set.id === app.ids.backgroundId}
+							<BGIcon
+								class="transition {app.ids.selectedSetId === set.id ? 'opacity-100' : 'opacity-80'}"
+							/>
+						{:else}
+							<PenIcon
+								class="transition {app.ids.selectedSetId === set.id ? 'opacity-100' : 'opacity-0'}"
+							/>
+						{/if}
 						<span class="sr-only">edit {set.name}</span>
 					</button>
 				</li>
@@ -215,9 +217,9 @@
 			<li>
 				<button
 					onclick={() => {
-						const { id } = app.createEmptyColorSet();
-						app.updateUISetId('foregroundId', id);
-						app.updateUISetId('selectedId', id);
+						const { id } = app.createEmptyColorSet() || { id: null };
+						app.updateId('foregroundId', id);
+						app.updateId('selectedSetId', id);
 					}}
 					class="text-th-bg-500 flex h-10 w-10 items-center justify-center rounded-lg"
 				>

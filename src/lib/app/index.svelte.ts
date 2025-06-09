@@ -1,6 +1,6 @@
+import { nanoid } from 'nanoid';
 import type { DeepReadonly } from '$lib/shared/utils';
-import { readTheme } from '$lib/theme/reader';
-import type { ColorSet } from '$lib/theme/types';
+import type { ColorSet, Theme } from '$lib/theme/types';
 import {
 	createShadeSetFromScale,
 	genRandomColor,
@@ -8,14 +8,17 @@ import {
 	getMostDesaturatedSet
 } from '$lib/theme/utils';
 
-import defaultTheme from '$themes/default.css?raw';
-import { nanoid } from 'nanoid';
+import { DBUtils, themetteDB } from './storage';
 import { getNextNameSuffix } from './utils';
 
-/** an object that holds the ids of the color sets used by the UI */
-type UISet = {
+const themes = await themetteDB.getAll('themes');
+
+/** an object that holds the ids of the color sets or themes used by the UI */
+type Ids = {
 	/** The currently selected set's id. */
-	selectedId: string | null;
+	selectedSetId: string | null;
+	/** The current selected theme's id */
+	selectedThemeId: string | null;
 	/** the id of the set that would be used for overriding the `--color-th-fg-*` colors */
 	foregroundId: string | null;
 	/** the id of the set that would be used for overriding the `--color-th-bg-*` colors */
@@ -23,43 +26,81 @@ type UISet = {
 };
 
 class AppState {
-	#sets = $state<ColorSet[]>(readTheme(defaultTheme));
-	#ids = $state<UISet>({
-		selectedId: this.#sets[this.#sets.findIndex((set) => set.name === 'primary')].id,
-		foregroundId: this.#sets[this.#sets.findIndex((set) => set.name === 'primary')].id,
-		backgroundId: this.#sets[this.#sets.findIndex((set) => set.name === 'surface')].id
+	#themes = $state<Theme[]>(themes);
+	#ids = $state<Ids>({
+		selectedThemeId: null,
+		selectedSetId: null,
+		foregroundId: null,
+		backgroundId: null
 	});
 
-	get sets(): DeepReadonly<ColorSet[]> {
-		return this.#sets;
+	get #theme() {
+		return this.#themes.find((theme) => theme.id === this.#ids.selectedThemeId);
 	}
 
-	get ids(): DeepReadonly<UISet> {
+	get themes(): DeepReadonly<Theme[]> {
+		return this.#themes;
+	}
+
+	get sets(): DeepReadonly<ColorSet[]> {
+		return this.#theme ? this.#theme.sets : [];
+	}
+
+	get ids(): DeepReadonly<Ids> {
 		return this.#ids;
 	}
 
-	setNewTheme(sets: ColorSet[]) {
-		this.#sets = sets;
+	/** Use this when updating the `selectedThemeId` value instead of directly updating it through `updateId`. */
+	setSelectedThemeId(id: string) {
+		const theme = this.themes.find((theme) => theme.id === id);
 
-		this.#ids.selectedId = this.#sets[0]?.id || null;
-		this.#ids.foregroundId = this.#sets[0]?.id || null;
-		this.#ids.backgroundId = getMostDesaturatedSet(sets)?.id || null;
+		if (theme) {
+			this.#ids.selectedThemeId = id;
+			this.#ids.selectedSetId = theme.sets[0]?.id || null;
+			this.#ids.foregroundId = theme.sets[0]?.id || null;
+			this.#ids.backgroundId = getMostDesaturatedSet(theme.sets)?.id || null;
+		}
 	}
 
 	/** finds the index of the given id, returns -1 if not found */
 	getIndexFromId(id: string) {
-		return this.#sets.findIndex((set) => set.id === id);
+		return this.sets.findIndex((set) => set.id === id);
 	}
 
 	/**
-	 * Updates the specified set id to the given value. Does nothing if the given id does not exist.
+	 * Updates the specified id to the given value. Does nothing if the given id does not exist.
 	 * @param key the set id you want to update
 	 * @param value the id of the set
 	 */
-	updateUISetId(key: keyof UISet, value: string | null) {
+	updateId(key: Exclude<keyof Ids, 'selectedThemeId'>, value: string | null) {
 		if (value === null) this.#ids[key] = value;
-		else if (this.#sets.find((set) => set.id === value)) {
+		else if (
+			this.sets.find((set) => set.id === value) ||
+			this.themes.find((theme) => theme.id === value)
+		) {
 			this.#ids[key] = value;
+		}
+	}
+
+	addTheme(theme: Theme) {
+		this.#themes.push(theme);
+		DBUtils.addTheme(theme);
+	}
+
+	deleteTheme(id: string) {
+		this.#themes.filter((theme) => theme.id !== id);
+		DBUtils.deleteTheme(id);
+	}
+
+	/** given a callback, checks if a theme is selected and would then run the callback and gives the theme to be mutated. */
+	#updateSelectedTheme<T>(cb: (theme: Theme) => T): T | undefined {
+		if (this.#theme) {
+			const r = cb(this.#theme);
+			this.#theme.updatedAt = new Date();
+
+			// instead of using an effect somewhere, take the chance to update the db
+			DBUtils.putTheme($state.snapshot(this.#theme));
+			return r;
 		}
 	}
 
@@ -74,96 +115,102 @@ class AppState {
 			Omit<ColorSet, 'id' | 'contrasts'> & { contrasts: Partial<ColorSet['contrasts']> }
 		>
 	) {
-		const index = this.#sets.findIndex((set) => set.id === id);
-		const set: ColorSet | undefined = this.#sets[index];
-		if (set) {
-			// handle updating the set's name
-			if (Object.hasOwn(updates, 'name')) {
-				let name = updates.name || set.name;
-				name = name
-					.trim()
-					.toLowerCase()
-					.replaceAll(/[^a-z0-9\s\-]/g, '')
-					.trim() // edge case for when an invalid character leaves space at the ends
-					.replaceAll(/\s+/g, '-');
+		this.#updateSelectedTheme((theme) => {
+			const index = theme.sets.findIndex((set) => set.id === id);
+			const set: ColorSet | undefined = theme.sets[index];
+			if (set) {
+				// handle updating the set's name
+				if (Object.hasOwn(updates, 'name')) {
+					let name = updates.name || set.name;
+					name = name
+						.trim()
+						.toLowerCase()
+						.replaceAll(/[^a-z0-9\s\-]/g, '')
+						.trim() // edge case for when an invalid character leaves space at the ends
+						.replaceAll(/\s+/g, '-');
 
-				updates.name = getNextNameSuffix(
-					this.#sets.filter((set) => set.id !== id).map((set) => set.name),
-					name
-				);
+					updates.name = getNextNameSuffix(
+						theme.sets.filter((set) => set.id !== id).map((set) => set.name),
+						name
+					);
+				}
+
+				const { contrasts, ..._updates } = updates;
+
+				theme.sets[index] = { ...set, ..._updates };
+				theme.sets[index].contrasts = { ...set.contrasts, ...contrasts };
 			}
-
-			const { contrasts, ..._updates } = updates;
-
-			this.#sets[index] = { ...set, ..._updates };
-			this.#sets[index].contrasts = { ...set.contrasts, ...contrasts };
-		}
+		});
 	}
 
 	createEmptyColorSet() {
-		const id = nanoid();
-		const name = getNextNameSuffix(
-			this.#sets.map((set) => set.name),
-			'untitled'
-		);
-		const seed = genRandomColor();
-		const shades = createShadeSetFromScale(genScaleFromColor(seed));
-		const contrasts: ColorSet['contrasts'] = {
-			light: {
-				setId: id,
-				shade: '50'
-			},
-			dark: {
-				setId: id,
-				shade: '950'
-			}
-		};
+		return this.#updateSelectedTheme((theme) => {
+			const id = nanoid();
+			const name = getNextNameSuffix(
+				theme.sets.map((set) => set.name),
+				'untitled'
+			);
+			const seed = genRandomColor();
+			const shades = createShadeSetFromScale(genScaleFromColor(seed));
+			const contrasts: ColorSet['contrasts'] = {
+				light: {
+					setId: id,
+					shade: '50'
+				},
+				dark: {
+					setId: id,
+					shade: '950'
+				}
+			};
 
-		const colorSet: ColorSet = {
-			name,
-			id,
-			...shades,
-			contrasts
-		};
+			const colorSet: ColorSet = {
+				name,
+				id,
+				...shades,
+				contrasts
+			};
 
-		this.#sets.push(colorSet);
-		return colorSet;
+			theme.sets.push(colorSet);
+			return colorSet;
+		});
 	}
 
 	deleteColorSet(id: string) {
-		const index = this.getIndexFromId(id);
-		if (index === -1) return;
+		this.#updateSelectedTheme((theme) => {
+			const index = this.getIndexFromId(id);
+			if (index === -1) return;
 
-		// filter out the color set
-		this.#sets = this.#sets.filter((set) => set.id !== id);
+			// filter out the color set
+			theme.sets = theme.sets.filter((set) => set.id !== id);
 
-		// for selected ids, try moving the selection one index down/up or set to null if empty
-		if (this.#ids.selectedId === id) {
-			let i = index < this.#sets.length ? index : index - 1; // note the set already got shifted
-			let id = this.#sets[i] ? this.#sets[i].id : null;
-			this.updateUISetId('selectedId', id);
-		}
-		// same for the foreground id
-		if (this.#ids.foregroundId === id) {
-			let i = index < this.#sets.length ? index : index - 1; // note the set already got shifted
-			let id = this.#sets[i] ? this.#sets[i].id : null;
-			this.updateUISetId('foregroundId', id);
-		}
-		// for the background id, we should just set it to null
-		if (this.#ids.backgroundId === id) {
-			this.updateUISetId('backgroundId', null);
-		}
-
-		// handle contrasts that refer to the deleted id and change it to itself
-		this.#sets.forEach((set) => {
-			if (set.contrasts.light.setId === id) {
-				set.contrasts.light.setId = set.id;
-				set.contrasts.light.shade = '50';
+			// for selected ids, try moving the selection one index down/up or set to null if empty
+			if (this.#ids.selectedSetId === id) {
+				let i = index < theme.sets.length ? index : index - 1; // note the set already got shifted
+				let id = theme.sets[i] ? theme.sets[i].id : null;
+				this.updateId('selectedSetId', id);
 			}
-			if (set.contrasts.dark.setId === id) {
-				set.contrasts.dark.setId = set.id;
-				set.contrasts.dark.shade = '950';
+			// same for the foreground id
+			if (this.#ids.foregroundId === id) {
+				let i = index < theme.sets.length ? index : index - 1; // note the set already got shifted
+				let id = theme.sets[i] ? theme.sets[i].id : null;
+				this.updateId('foregroundId', id);
 			}
+			// for the background id, we should just set it to null
+			if (this.#ids.backgroundId === id) {
+				this.updateId('backgroundId', null);
+			}
+
+			// handle contrasts that refer to the deleted id and change it to itself
+			theme.sets.forEach((set) => {
+				if (set.contrasts.light.setId === id) {
+					set.contrasts.light.setId = set.id;
+					set.contrasts.light.shade = '50';
+				}
+				if (set.contrasts.dark.setId === id) {
+					set.contrasts.dark.setId = set.id;
+					set.contrasts.dark.shade = '950';
+				}
+			});
 		});
 	}
 
@@ -173,13 +220,15 @@ class AppState {
 	 * @param target the index where the color set will go
 	 */
 	reorderColorSet(from: number, target: number) {
-		// Validate index and target
-		if (from < 0 || from >= this.#sets.length || target < 0 || target >= this.#sets.length) {
-			throw new Error('Index or target out of bounds');
-		}
+		this.#updateSelectedTheme((theme) => {
+			// Validate index and target
+			if (from < 0 || from >= theme.sets.length || target < 0 || target >= theme.sets.length) {
+				throw new Error('Index or target out of bounds');
+			}
 
-		const [item] = this.#sets.splice(from, 1); // Remove the item from its current position
-		this.#sets.splice(target, 0, item); // Insert it at the target position
+			const [item] = theme.sets.toSpliced(from, 1); // Remove the item from its current position
+			theme.sets.splice(target, 0, item); // Insert it at the target position
+		});
 	}
 }
 

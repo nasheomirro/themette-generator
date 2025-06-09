@@ -1,7 +1,7 @@
 import chroma, { type Color, type Scale } from 'chroma-js';
 
 import { colorShades } from './constants';
-import type { ColorSet, ColorShade, ShadeSet, VarColorObj, VarColorStr } from './types';
+import type { ColorSet, ColorShade, ShadeSet, Theme, VarColorObj, VarColorStr } from './types';
 import type { DeepReadonly } from '$lib/shared/utils';
 
 /** from a list of sets, returns the set that is the most desaturated and more likely to be the background set */
@@ -178,6 +178,15 @@ export function getVarColorObjValue(
 ): string | undefined {
 	const v = sets.find((set) => set.id === obj.setId)?.[obj.shade];
 	return v;
+}
+
+export function isTheme(theme: any): theme is Theme {
+	return (
+		typeof theme.id === 'string' &&
+		typeof theme.name === 'string' &&
+		Array.isArray(theme.sets) &&
+		theme.sets.every((set: any) => isColorSet(set))
+	);
 }
 
 export function isColorSet(set: any): set is ColorSet {

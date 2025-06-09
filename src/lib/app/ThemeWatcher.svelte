@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { toggleMode } from 'mode-watcher';
-	
+
 	import type { DeepWriteable } from '$lib/shared/utils';
-	import type { ColorSet } from '$lib/theme/types';
+	import type { ColorSet, Theme } from '$lib/theme/types';
 	import { writeTheme } from '$lib/theme/writer';
 	import { app } from './index.svelte';
 
@@ -18,6 +18,7 @@
 		return writeTheme([fg, bg].filter((set) => typeof set !== 'undefined'));
 	});
 
+	// we make sure that the theme is accessible via CSS for fg and bg reasons
 	$effect(() => document.documentElement.setAttribute('style', theme.raw + ' ' + ui.raw));
 </script>
 

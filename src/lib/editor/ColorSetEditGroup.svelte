@@ -26,7 +26,7 @@
 					<button
 						class="btn disabled:opacity-50 {app.ids.backgroundId === set.id && "bg-th-bg-200-800 duration-0"}"
 						onclick={() => {
-							app.updateUISetId('backgroundId', app.ids.backgroundId !== set.id ? set.id : null);
+							app.updateId('backgroundId', app.ids.backgroundId !== set.id ? set.id : null);
 						}}
 					>
 						<BGIcon />

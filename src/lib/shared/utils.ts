@@ -1,3 +1,8 @@
+export function getNameWithoutExtension(filename: string) {
+	const lastDotIndex = filename.lastIndexOf('.');
+	return lastDotIndex === -1 ? filename : filename.slice(0, lastDotIndex);
+}
+
 /** checks if the given mouse event is inside the rect */
 export function isCursorInside(event: MouseEvent, rect: DOMRect): boolean {
 	return (

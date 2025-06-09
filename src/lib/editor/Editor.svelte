@@ -5,7 +5,7 @@
 	import ColorSetPicker from './ColorSetPicker.svelte';
 
 	const selectedSet = $derived(
-		app.ids.selectedId ? app.sets[app.getIndexFromId(app.ids.selectedId)] : null
+		app.ids.selectedSetId ? app.sets[app.getIndexFromId(app.ids.selectedSetId)] : null
 	);
 </script>
 

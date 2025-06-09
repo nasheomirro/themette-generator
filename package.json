@@ -47,6 +47,7 @@
 	"dependencies": {
 		"bits-ui": "^1.8.0",
 		"chroma-js": "^3.1.2",
+		"idb": "^8.0.3",
 		"mode-watcher": "^1.0.7",
 		"nanoid": "^5.1.5"
 	}
