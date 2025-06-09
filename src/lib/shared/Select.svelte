@@ -40,7 +40,7 @@ from the perspective of the consumer of this component, it will be typed appropr
 		>
 			{#each items as { value, label, disabled } (value)}
 				<Select.Item
-					class="data-highlighted:bg-th-bg-100-900/50 flex justify-between px-4 py-2 text-sm"
+					class="data-highlighted:bg-th-bg-100-900/50 flex items-center justify-between px-4 py-2 text-sm"
 					{value}
 					{label}
 					{disabled}

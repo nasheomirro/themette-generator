@@ -5,11 +5,14 @@
 </script>
 
 <MainShell>
+	{#snippet theme()}
+		<div></div>
+	{/snippet}
 	{#snippet editor()}
 		<Editor />
 	{/snippet}
 	{#snippet code()}
-	<CodePreview />
+		<CodePreview />
 	{/snippet}
 	{#snippet preview()}
 		<div></div>

@@ -5,17 +5,20 @@
 	import Navbar from './Navbar.svelte';
 	import BottomBar from './BottomBar.svelte';
 
+	import EditorIcon from '~icons/lucide/paintbrush';
+	import ThemeIcon from '~icons/lucide/palette';
 	import CodeIcon from '~icons/lucide/braces';
 	import PreviewIcon from '~icons/lucide/eye';
 	import { panel } from './panels.svelte';
 
 	type Props = {
+		theme: Snippet;
 		editor: Snippet;
 		preview: Snippet;
 		code: Snippet;
 	};
 
-	const { code, editor, preview }: Props = $props();
+	const { theme, code, editor, preview }: Props = $props();
 </script>
 
 <Navbar />
@@ -25,13 +28,43 @@
 >
 	<div
 		class="
-      {panel.mobile === 'editor' ? 'max-md:block' : 'max-md:hidden'}
       md:border-r-th-bg-100-900 px-4
-      pt-10 pb-26 max-md:col-start-1 max-md:row-start-1 md:sticky md:top-14 md:z-30 md:h-[calc(100vh-3.5rem)] md:overflow-auto md:border-r md:px-6 md:pb-10 lg:px-8
+      pt-10 pb-26 max-md:col-start-1 max-md:row-start-1 md:sticky md:top-14 md:z-30 md:h-[calc(100vh-3.5rem)] md:overflow-auto md:border-r md:px-6 md:pt-4 md:pb-10 lg:px-8
     "
 	>
-		<div>
+		<RadioGroup.Root
+			orientation="horizontal"
+			bind:value={panel.desktop.editor}
+			class="bg-th-bg-50-950 border-th-bg-100-900 mb-8 ml-auto flex w-fit items-center gap-2 rounded-lg border p-2 max-md:hidden"
+		>
+			<RadioGroup.Item
+				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 flex items-center gap-2 rounded px-2 py-1.5 text-xs transition"
+				value="theme"
+			>
+				<ThemeIcon /> Presets
+			</RadioGroup.Item>
+			<RadioGroup.Item
+				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 flex items-center gap-2 rounded px-2 py-1.5 text-xs transition"
+				value="editor"
+			>
+				<EditorIcon /> Editor
+			</RadioGroup.Item>
+		</RadioGroup.Root>
+
+		<div
+			class="
+		  {panel.mobile === 'editor' ? 'max-md:block' : 'max-md:hidden'} 
+			{panel.desktop.editor === 'editor' ? 'md:block' : 'md:hidden'}"
+		>
 			{@render editor()}
+		</div>
+
+		<div
+			class="
+		  {panel.mobile === 'theme' ? 'max-md:block' : 'max-md:hidden'} 
+			{panel.desktop.editor === 'theme' ? 'md:block' : 'md:hidden'}"
+		>
+			{@render theme()}
 		</div>
 	</div>
 	<div
@@ -42,14 +75,14 @@
 	>
 		<RadioGroup.Root
 			orientation="horizontal"
-			bind:value={panel.desktop}
-			class="bg-th-bg-50-950 border-th-bg-100-900 ml-auto flex w-fit items-center gap-1 rounded-lg border p-2 max-md:hidden mb-4"
+			bind:value={panel.desktop.preview}
+			class="bg-th-bg-50-950 border-th-bg-100-900 mb-8 ml-auto flex w-fit items-center gap-2 rounded-lg border p-2 max-md:hidden"
 		>
 			<RadioGroup.Item
 				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 flex items-center gap-2 rounded px-2 py-1.5 text-xs transition"
 				value="preview"
 			>
-				<PreviewIcon /> preview
+				<PreviewIcon /> Preview
 			</RadioGroup.Item>
 			<RadioGroup.Item
 				class="data-[state=checked]:bg-th-bg-100-900 hover:bg-th-bg-100-900 flex items-center gap-2 rounded px-2 py-1.5 text-xs transition"
@@ -60,8 +93,8 @@
 		</RadioGroup.Root>
 
 		<div
-			class="{panel.mobile === 'preview' ? 'max-md:block' : 'max-md:hidden'}  {panel.desktop ===
-			'preview'
+			class="{panel.mobile === 'preview' ? 'max-md:block' : 'max-md:hidden'}  {panel.desktop
+				.preview === 'preview'
 				? 'md:block'
 				: 'md:hidden'}
       "
@@ -72,7 +105,7 @@
 		<div
 			class="
       {panel.mobile === 'generated' ? 'max-md:block' : 'max-md:hidden'} 
-      {panel.desktop === 'generated' ? 'md:block' : 'md:hidden'}
+      {panel.desktop.preview === 'generated' ? 'md:block' : 'md:hidden'}
     "
 		>
 			{@render code()}

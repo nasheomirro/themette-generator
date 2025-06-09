@@ -36,5 +36,5 @@
 			</span>
 		{/if}
 	</button>
-	<pre class="border-th-bg-100-900 overflow-scroll rounded-lg border p-6 text-xs max-h-[80rem]">{str}</pre>
+	<pre class="border-th-bg-100-900 overflow-scroll rounded-lg border p-6 text-xs">{str}</pre>
 </div>

@@ -7,6 +7,7 @@
 		title: Snippet;
 		description: Snippet;
 		onconfirm: () => void;
+		removeCancel?: boolean;
 		contentProps?: WithoutChild<AlertDialog.ContentProps>;
 	};
 
@@ -14,6 +15,7 @@
 		open = $bindable(false),
 		children,
 		trigger,
+		removeCancel,
 		contentProps,
 		title,
 		onconfirm,
@@ -47,7 +49,9 @@
 				}}
 				class="flex justify-end gap-2"
 			>
-				<AlertDialog.Cancel type="button" class="btn px-4">Cancel</AlertDialog.Cancel>
+				{#if removeCancel}
+					<AlertDialog.Cancel type="button" class="btn px-4">Cancel</AlertDialog.Cancel>
+				{/if}
 				<AlertDialog.Action type="submit" class="btn px-4">Confirm</AlertDialog.Action>
 			</form>
 		</AlertDialog.Content>
